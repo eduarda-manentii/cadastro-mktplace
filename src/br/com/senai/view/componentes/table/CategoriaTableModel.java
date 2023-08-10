@@ -1,12 +1,13 @@
 package br.com.senai.view.componentes.table;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
 import br.com.senai.core.domain.Categoria;
 
-public class CategoriaTableModel extends AbstractTableModel {
+public class CategoriaTableModel extends AbstractTableModel implements TableModelLimpavel {
 
 	private static final long serialVersionUID = 1L;
 	private List<Categoria> categorias;
@@ -57,5 +58,10 @@ public class CategoriaTableModel extends AbstractTableModel {
 	public boolean isVazio() {
 		return categorias.isEmpty();
 	}
+	
+	public void limpar() {
+		this.categorias = new ArrayList<>();
+	}
+
 
 }
