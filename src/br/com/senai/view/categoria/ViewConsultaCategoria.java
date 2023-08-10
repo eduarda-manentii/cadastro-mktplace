@@ -4,7 +4,9 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -36,7 +38,10 @@ public class ViewConsultaCategoria extends JDialog {
 		
 		CategoriaTableModel model = new CategoriaTableModel(new ArrayList<Categoria>());
 		this.tableCategoria = new JTable(model);
-		Utilitaria.configurarTabela(tableCategoria);
+		 Map<String, Integer> largurasColunas = new HashMap<>();
+        largurasColunas.put("ID", 10);    
+        largurasColunas.put("Nome", 300);
+	     Utilitaria.configurarTabela(tableCategoria, largurasColunas);
 
 		setTitle("Gerenciar Categoria - Listagem");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -84,7 +89,7 @@ public class ViewConsultaCategoria extends JDialog {
 					List<Categoria> categoriaEncontrada = service.listarPor(txtFiltro.getText());
 					CategoriaTableModel model = new CategoriaTableModel(categoriaEncontrada);
 					tableCategoria.setModel(model);
-					Utilitaria.configurarTabela(tableCategoria);
+					Utilitaria.configurarTabela(tableCategoria, largurasColunas);
 					if(categoriaEncontrada.isEmpty()) {
 						JOptionPane.showMessageDialog(contentPane, "Não foi"
 								+ " encontrado nenhuma categoria com esse nome.");

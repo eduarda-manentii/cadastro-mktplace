@@ -2,7 +2,9 @@ package br.com.senai.view.restaurante;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -39,7 +41,10 @@ public class ViewConsultaRestaurante extends JDialog {
 		RestauranteTableModel model = new RestauranteTableModel();
 		this.tableRestaurante = new JTable(model);
 		tableRestaurante.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		Utilitaria.configurarTabela(tableRestaurante);
+		 Map<String, Integer> largurasColunas = new HashMap<>();
+        largurasColunas.put("ID", 10);    
+        largurasColunas.put("Nome", 300);
+		Utilitaria.configurarTabela(tableRestaurante, largurasColunas);
 		
 		setResizable(false);
 		setTitle("Gerenciar Restaurante - Listagem");
@@ -104,7 +109,7 @@ public class ViewConsultaRestaurante extends JDialog {
 					List<Restaurante> restauranteEncontrado = restauranteService.listarPor(filtroInformado, categoriaInformada);
 					RestauranteTableModel model = new RestauranteTableModel(restauranteEncontrado);
 					tableRestaurante.setModel(model);
-					Utilitaria.configurarTabela(tableRestaurante);
+					Utilitaria.configurarTabela(tableRestaurante, largurasColunas);
 					if (restauranteEncontrado.isEmpty()) {
 						JOptionPane.showMessageDialog(contentPane, "Não foi encontrado nenhum restaurante "
 								+ "com os filtros informados.");

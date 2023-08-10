@@ -109,13 +109,15 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		txtAbertura.setBounds(341, 67, 101, 24);
 		contentPane.add(txtAbertura);
 		
-		txtAbertura.addFocusListener(new FocusAdapter() {
+        txtAbertura.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-            	txtAbertura.setCaretPosition(0); 
+            	if (txtAbertura.getText().equals("  :  ")) {
+                    txtAbertura.setCaretPosition(0);
+                }
             }
         });
-		
+
 		try {
 			MaskFormatter mascaraHora = new MaskFormatter("##:##");
 	        mascaraHora.install(txtAbertura);
@@ -134,7 +136,9 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		txtFechamento.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-            	txtFechamento.setCaretPosition(0); 
+            	if (txtFechamento.getText().equals("  :  ")) {
+                	txtFechamento.setCaretPosition(0);
+				} 
             }
         });
 		

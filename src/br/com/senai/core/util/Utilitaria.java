@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -11,6 +12,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import br.com.senai.view.componentes.table.TableModelLimpavel;
@@ -67,20 +69,20 @@ public class Utilitaria {
         preencherCombo(comboBox, list, null);
     }
     
-	public static void configurarTabela(JTable table) {
-		final int COLUNA_ID = 0;
-		final int COLUNA_NOME = 1;
-		table.getTableHeader().setReorderingAllowed(false);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		configurarColuna(table, COLUNA_ID, 90);
-		configurarColuna(table, COLUNA_NOME, 250);
-	}
-	
-    
-	public static void configurarColuna(JTable table, int indice, int largura) {
-		table.getColumnModel().getColumn(indice).setResizable(false);
-		table.getColumnModel().getColumn(indice).setPreferredWidth(largura);
-	}
+    public static void configurarTabela(JTable tabela, Map<String, Integer> largurasColunas) {
+        tabela.getTableHeader().setReorderingAllowed(false);
+        tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        for (Map.Entry<String, Integer> entrada : largurasColunas.entrySet()) {
+            configurarColuna(tabela, entrada.getKey(), entrada.getValue());
+        }
+    }
+
+    public static void configurarColuna(JTable tabela, String nomeColuna, int largura) {
+        TableColumn coluna = tabela.getColumn(nomeColuna);
+        coluna.setResizable(false);
+        coluna.setPreferredWidth(largura);
+    }
 	
 
 }
