@@ -39,6 +39,7 @@ public class ViewConsultaRestaurante extends JDialog {
 		RestauranteTableModel model = new RestauranteTableModel();
 		this.tableRestaurante = new JTable(model);
 		tableRestaurante.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		Utilitaria.configurarTabela(tableRestaurante);
 		
 		setResizable(false);
 		setTitle("Gerenciar Restaurante - Listagem");
@@ -93,10 +94,18 @@ public class ViewConsultaRestaurante extends JDialog {
 		contentPane.add(btnExcluir);
 		
 		JButton btnListar = new JButton("Listar");
+
 		btnListar.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (!pesquisa()) {
+					String filtroInformado = txtNome.getText();
+					Categoria categoriaInformada = (Categoria) cbCategorias.getSelectedItem();
+					List<Restaurante> restauranteEncontrado = restauranteService.listarPor(filtroInformado, categoriaInformada);
+					RestauranteTableModel model = new RestauranteTableModel(restauranteEncontrado);
+					tableRestaurante.setModel(model);
+					Utilitaria.configurarTabela(tableRestaurante);
+					if (restauranteEncontrado.isEmpty()) {
 						JOptionPane.showMessageDialog(contentPane, "Não foi encontrado nenhum restaurante "
 								+ "com os filtros informados.");
 					}
@@ -121,14 +130,6 @@ public class ViewConsultaRestaurante extends JDialog {
 					setVisible(false);
 					view.setEdicaoRestaurante(true); 
 					view.setVisible(true);
-					/*SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>(){
-						protected Boolean doInBackground() throws Exception {
-							return pesquisa();
-						};
-					};
-					worker.execute();*/
-					
-					
 					setVisible(true);
 				} else {
 					JOptionPane.showMessageDialog(contentPane, "Selecione uma linha para edição.");
@@ -175,12 +176,4 @@ public class ViewConsultaRestaurante extends JDialog {
 		contentPane.add(panel);
 	}
 	
-	private boolean pesquisa() {
-		String filtroInformado = txtNome.getText();
-		Categoria categoriaInformada = (Categoria) cbCategorias.getSelectedItem();
-		List<Restaurante> restauranteEncontrado = restauranteService.listarPor(filtroInformado, categoriaInformada);
-		RestauranteTableModel model = new RestauranteTableModel(restauranteEncontrado);
-		tableRestaurante.setModel(model);
-		return !restauranteEncontrado.isEmpty();
-	}
 }

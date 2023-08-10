@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
@@ -34,8 +33,11 @@ public class ViewConsultaCategoria extends JDialog {
 
 	public ViewConsultaCategoria() {
 		this.service = new CategoriaService();
+		
 		CategoriaTableModel model = new CategoriaTableModel(new ArrayList<Categoria>());
 		this.tableCategoria = new JTable(model);
+		Utilitaria.configurarTabela(tableCategoria);
+
 		setTitle("Gerenciar Categoria - Listagem");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 521, 350);
@@ -73,17 +75,16 @@ public class ViewConsultaCategoria extends JDialog {
 		lblFiltro.setBounds(12, 28, 70, 25);
 		contentPane.add(lblFiltro);
 		
-		this.configurarTabela();
 		JButton btnListar = new JButton("Listar");
 		btnListar.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					configurarTabela();
 					List<Categoria> categoriaEncontrada = service.listarPor(txtFiltro.getText());
 					CategoriaTableModel model = new CategoriaTableModel(categoriaEncontrada);
 					tableCategoria.setModel(model);
+					Utilitaria.configurarTabela(tableCategoria);
 					if(categoriaEncontrada.isEmpty()) {
 						JOptionPane.showMessageDialog(contentPane, "Não foi"
 								+ " encontrado nenhuma categoria com esse nome.");
@@ -156,17 +157,4 @@ public class ViewConsultaCategoria extends JDialog {
 		});
 	}
 	
-	private void configurarColuna(int indice, int largura) {
-		this.tableCategoria.getColumnModel().getColumn(indice).setResizable(false);
-		this.tableCategoria.getColumnModel().getColumn(indice).setPreferredWidth(largura);
-	}
-	
-	private void configurarTabela() {
-		final int COLUNA_ID = 0;
-		final int COLUNA_NOME = 1;
-		this.tableCategoria.getTableHeader().setReorderingAllowed(false);
-		this.tableCategoria.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		this.configurarColuna(COLUNA_ID, 90);
-		this.configurarColuna(COLUNA_NOME, 250);
-	}
 }

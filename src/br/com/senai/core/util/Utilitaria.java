@@ -10,6 +10,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.TableModel;
 
 import br.com.senai.view.componentes.table.TableModelLimpavel;
@@ -65,5 +66,21 @@ public class Utilitaria {
     public static <T> void preencherCombo(JComboBox<T> comboBox, Collection<T> list) {
         preencherCombo(comboBox, list, null);
     }
+    
+	public static void configurarTabela(JTable table) {
+		final int COLUNA_ID = 0;
+		final int COLUNA_NOME = 1;
+		table.getTableHeader().setReorderingAllowed(false);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		configurarColuna(table, COLUNA_ID, 90);
+		configurarColuna(table, COLUNA_NOME, 250);
+	}
+	
+    
+	public static void configurarColuna(JTable table, int indice, int largura) {
+		table.getColumnModel().getColumn(indice).setResizable(false);
+		table.getColumnModel().getColumn(indice).setPreferredWidth(largura);
+	}
+	
 
 }
