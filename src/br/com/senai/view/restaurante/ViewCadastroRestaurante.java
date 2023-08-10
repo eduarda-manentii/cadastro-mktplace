@@ -1,15 +1,18 @@
 package br.com.senai.view.restaurante;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
@@ -20,12 +23,12 @@ import br.com.senai.core.service.CategoriaService;
 import br.com.senai.core.service.RestauranteService;
 import br.com.senai.core.util.Utilitaria;
 
-public class ViewCadastroRestaurante extends JFrame {
+public class ViewCadastroRestaurante extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtNome;
-	private JTextField txtDescricao;
+	private JTextArea txtDescricao;
 	private JTextField txtLogradouro;
 	private JTextField txtComplemento;
 	private JTextField txtCidade;
@@ -33,13 +36,15 @@ public class ViewCadastroRestaurante extends JFrame {
 	private JComboBox<Categoria> cbCategorias;
 	
 	private Restaurante restaurante;
-	private Endereco endereco;
 	private RestauranteService restauranteService;
 	private CategoriaService categoriaService;
 	private boolean isEdicaoRestaurante;
 	
-	public ViewCadastroRestaurante() {
+
+	public ViewCadastroRestaurante(Window owner) {
+		super(owner);
 		this.categoriaService = new CategoriaService();
+		List<Categoria> categorias = categoriaService.listarTodas();
 		this.restauranteService = new RestauranteService();
 		setResizable(false);
 		setTitle("Gerenciar Restaurante - Cadastro");
@@ -51,12 +56,11 @@ public class ViewCadastroRestaurante extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
+		setModal(true);
 		
 		JButton btnPesquisar = new JButton("Pesquisar");
 		btnPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ViewConsultaRestaurante view = new ViewConsultaRestaurante();
-				view.setVisible(true);
 				dispose();
 			}
 		});
@@ -76,13 +80,17 @@ public class ViewCadastroRestaurante extends JFrame {
 				    Categoria categoria = (Categoria) cbCategorias.getSelectedItem();
 
 				    if (!isEdicaoRestaurante) {
-				        endereco = new Endereco(cidade, logradouro, bairro, complemento);
+				        Endereco endereco = new Endereco(cidade, logradouro, bairro, complemento);
 				        restaurante = new Restaurante(nome, descricao, endereco, categoria);
 				        restauranteService.salvar(restaurante);
 				        JOptionPane.showMessageDialog(contentPane, "Restaurante salvo.");
 				        Utilitaria.limparCampos(contentPane);
 				    } else {
-				        endereco.setCidade(cidade);
+				    	Endereco enderecoTemp = new Endereco(cidade, logradouro, bairro, complemento);
+				        Restaurante restauranteTemp = new Restaurante(nome, descricao, enderecoTemp, categoria);
+				        restauranteService.validar(restauranteTemp);
+				        Endereco endereco = restaurante.getEndereco();
+			        	endereco.setCidade(cidade);
 				        endereco.setLongradouro(logradouro);
 				        endereco.setBairro(bairro);
 				        endereco.setComplemento(complemento);
@@ -91,7 +99,7 @@ public class ViewCadastroRestaurante extends JFrame {
 				        restaurante.setCategoria(categoria);
 				        restauranteService.salvar(restaurante);
 				        JOptionPane.showMessageDialog(contentPane, "Restaurante alterado.");
-				    }
+					}
 				} catch (Exception ex) {
 				    JOptionPane.showMessageDialog(contentPane, ex.getMessage());
 				}
@@ -107,7 +115,8 @@ public class ViewCadastroRestaurante extends JFrame {
 					int opcao = JOptionPane.showConfirmDialog(contentPane, "Tem certeza que deseja"
 							+ " cancelar a edição?", "CONFIRMAÇÃO", JOptionPane.YES_NO_OPTION);
 					if(opcao == 0) {
-						ViewCadastroRestaurante view = new ViewCadastroRestaurante();
+						ViewCadastroRestaurante view = new ViewCadastroRestaurante(owner);
+						setVisible(false);
 						view.setVisible(true);
 						dispose();
 					}
@@ -130,7 +139,6 @@ public class ViewCadastroRestaurante extends JFrame {
 		
 		cbCategorias = new JComboBox<Categoria>();
 		Categoria placeholder = new Categoria("Selecione...");
-		List<Categoria> categorias = categoriaService.listarTodas();
 		Utilitaria.preencherCombo(cbCategorias, categorias, placeholder);
 		cbCategorias.setBounds(229, 57, 244, 25);
 		contentPane.add(cbCategorias);
@@ -143,7 +151,7 @@ public class ViewCadastroRestaurante extends JFrame {
 		lblCategoria.setBounds(227, 35, 70, 15);
 		contentPane.add(lblCategoria);
 		
-		txtDescricao = new JTextField();
+		txtDescricao = new JTextArea();
 		txtDescricao.setBounds(12, 106, 461, 59);
 		contentPane.add(txtDescricao);
 		txtDescricao.setColumns(10);
@@ -187,11 +195,11 @@ public class ViewCadastroRestaurante extends JFrame {
 		JLabel lblComplemento = new JLabel("Complemento");
 		lblComplemento.setBounds(12, 282, 152, 15);
 		contentPane.add(lblComplemento);
+		
 	}
 	
-	public void setRestaurante(Restaurante restaurante, Endereco endereco) {
+	public void setRestaurante(Restaurante restaurante) {
 		this.restaurante = restaurante;
-		this.endereco = endereco;
 		this.cbCategorias.setSelectedItem(restaurante.getCategoria());
 		this.txtNome.setText(restaurante.getNome());
 		this.txtDescricao.setText(restaurante.getDescricao());

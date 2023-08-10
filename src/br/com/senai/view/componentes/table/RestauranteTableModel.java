@@ -1,16 +1,22 @@
 package br.com.senai.view.componentes.table;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
 import br.com.senai.core.domain.Restaurante;
 
-public class RestauranteTableModel extends AbstractTableModel {
+public class RestauranteTableModel extends AbstractTableModel implements TableModelLimpavel {
 
 	private static final long serialVersionUID = 1L;
 	private List<Restaurante> restaurantes;
 	
+	
+	public RestauranteTableModel() {
+		this.restaurantes = new ArrayList<>();
+	}
+
 	public RestauranteTableModel(List<Restaurante> restaurantes) {
 		this.restaurantes = restaurantes;
 	}
@@ -56,6 +62,11 @@ public class RestauranteTableModel extends AbstractTableModel {
 	
 	public boolean isVazio() {
 		return restaurantes.isEmpty();
+	}
+	
+	
+	public void limpar() {
+		this.restaurantes = new ArrayList<>();
 	}
 
 }

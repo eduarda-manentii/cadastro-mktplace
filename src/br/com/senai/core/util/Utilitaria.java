@@ -7,7 +7,12 @@ import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.table.TableModel;
+
+import br.com.senai.view.componentes.table.TableModelLimpavel;
 
 public class Utilitaria {
 	
@@ -21,6 +26,17 @@ public class Utilitaria {
                 if (component instanceof JTextField) {
                     JTextField textField = (JTextField) component;
                     textField.setText("");
+                } else if (component instanceof JTable) {
+                	JTable table = (JTable) component;
+                	TableModel model = table.getModel();
+                	if(model instanceof TableModelLimpavel) {
+                		TableModelLimpavel limpavel = (TableModelLimpavel) model;
+                		limpavel.limpar();
+                		table.updateUI();
+                	}
+                } else if (component instanceof JTextArea) {
+                	JTextArea textArea = (JTextArea) component;
+                	textArea.setText("");
                 } else if (component instanceof JFormattedTextField) {
                     JFormattedTextField formattedTextField = (JFormattedTextField) component;
                     formattedTextField.setValue(null);

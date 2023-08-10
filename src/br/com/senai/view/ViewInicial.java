@@ -2,25 +2,35 @@ package br.com.senai.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import br.com.senai.view.categoria.ViewPesquisaCategoria;
+import br.com.senai.core.domain.Categoria;
+import br.com.senai.core.domain.Restaurante;
+import br.com.senai.core.service.CategoriaService;
+import br.com.senai.core.service.RestauranteService;
+import br.com.senai.view.categoria.ViewConsultaCategoria;
 import br.com.senai.view.horarioAtendimento.ViewGerenciaHorarioAtendimento;
+import br.com.senai.view.progresso.ViewProgressoInfinito;
 import br.com.senai.view.restaurante.ViewConsultaRestaurante;
-import javax.swing.SwingConstants;
 
 public class ViewInicial extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private CategoriaService categoriaService;
+	private RestauranteService restauranteService;
 
 	public ViewInicial() {
+		this.categoriaService = new CategoriaService();
+		this.restauranteService = new RestauranteService();
 		setTitle("Tela Principal");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -43,7 +53,7 @@ public class ViewInicial extends JFrame {
 		JMenuItem mntCategoria = new JMenuItem("Categorias");
 		mntCategoria.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ViewPesquisaCategoria view = new ViewPesquisaCategoria();
+				ViewConsultaCategoria view = new ViewConsultaCategoria();
 				view.setVisible(true);
 			}
 		});
@@ -52,8 +62,13 @@ public class ViewInicial extends JFrame {
 		JMenuItem mntRestaurante = new JMenuItem("Restaurantes");
 		mntRestaurante.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ViewConsultaRestaurante view = new ViewConsultaRestaurante();
-				view.setVisible(true);
+				
+				ViewProgressoInfinito.chamaMetodoComProgresso(ViewInicial.this, () -> {
+                    return categoriaService.listarTodas();
+				}, (List<Categoria> categorias) -> {
+					ViewConsultaRestaurante view = new ViewConsultaRestaurante(categorias);
+                    view.setVisible(true);
+				});
 			}
 		});
 		mnCadastros.add(mntRestaurante);
@@ -64,8 +79,13 @@ public class ViewInicial extends JFrame {
 		JMenuItem mntHorario = new JMenuItem("Horarios");
 		mntHorario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ViewGerenciaHorarioAtendimento view = new ViewGerenciaHorarioAtendimento();
-				view.setVisible(true);
+				
+				ViewProgressoInfinito.chamaMetodoComProgresso(ViewInicial.this,() -> {
+                    return restauranteService.listarTodas();
+				}, (List<Restaurante> restaurantes) -> {
+					ViewGerenciaHorarioAtendimento view = new ViewGerenciaHorarioAtendimento(restaurantes);
+					view.setVisible(true);
+				});
 			}
 		});
 		mnConfigurações.add(mntHorario);

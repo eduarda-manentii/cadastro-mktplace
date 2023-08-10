@@ -2,11 +2,11 @@ package br.com.senai.view.restaurante;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -16,37 +16,33 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 
 import br.com.senai.core.domain.Categoria;
 import br.com.senai.core.domain.Restaurante;
-import br.com.senai.core.service.CategoriaService;
 import br.com.senai.core.service.RestauranteService;
 import br.com.senai.core.util.Utilitaria;
 import br.com.senai.view.componentes.table.RestauranteTableModel;
-import javax.swing.border.TitledBorder;
 
-public class ViewConsultaRestaurante extends JFrame {
+public class ViewConsultaRestaurante extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtNome;
 	private JComboBox<Categoria> cbCategorias;
 	private JTable tableRestaurante;
-	
 	private RestauranteService restauranteService;
-	private CategoriaService categoriaService;
 	
-	public ViewConsultaRestaurante() {
+	public ViewConsultaRestaurante(List<Categoria> categorias) {
 		this.restauranteService = new RestauranteService();
-		this.categoriaService = new CategoriaService();
 		
-		RestauranteTableModel model = new RestauranteTableModel(new ArrayList<Restaurante>());
+		RestauranteTableModel model = new RestauranteTableModel();
 		this.tableRestaurante = new JTable(model);
 		tableRestaurante.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		setResizable(false);
 		setTitle("Gerenciar Restaurante - Listagem");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 610, 391);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -54,13 +50,17 @@ public class ViewConsultaRestaurante extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
+		setModal(true);
 		
 		JButton btnNovo = new JButton("Novo");
 		btnNovo.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
-				ViewCadastroRestaurante view = new ViewCadastroRestaurante();
+				ViewCadastroRestaurante view = new ViewCadastroRestaurante(ViewConsultaRestaurante.this);
+				setVisible(false);
+				Utilitaria.limparCampos(contentPane);
 				view.setVisible(true);
-				dispose();
+				setVisible(true);
 			}
 		});
 		btnNovo.setBounds(452, 12, 117, 25);
@@ -92,39 +92,13 @@ public class ViewConsultaRestaurante extends JFrame {
 		btnExcluir.setBounds(452, 299, 117, 25);
 		contentPane.add(btnExcluir);
 		
-		JButton btnEditar = new JButton("Editar");
-		btnEditar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int linhaSelecionada = tableRestaurante.getSelectedRow();
-				if(linhaSelecionada >= 0) {
-					RestauranteTableModel model = (RestauranteTableModel) tableRestaurante.getModel();
-					Restaurante restauranteSelecionado = model.getPor(linhaSelecionada);
-					ViewCadastroRestaurante view = new ViewCadastroRestaurante();
-					view.setRestaurante(restauranteSelecionado, restauranteSelecionado.getEndereco());
-					view.setEdicaoRestaurante(true); 
-					view.setVisible(true);
-					dispose();
-				} else {
-					JOptionPane.showMessageDialog(contentPane, "Selecione uma linha para edição.");
-				}
-			}
-		});
-		btnEditar.setBounds(321, 299, 117, 25);
-		contentPane.add(btnEditar);
-		
 		JButton btnListar = new JButton("Listar");
 		btnListar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String filtroInformado = txtNome.getText();
-					Categoria categoriaInformada = (Categoria) cbCategorias.getSelectedItem();
-					List<Restaurante> restauranteEncontrado = restauranteService.listarPor(filtroInformado, categoriaInformada);
-					if (restauranteEncontrado.isEmpty()) {
+					if (!pesquisa()) {
 						JOptionPane.showMessageDialog(contentPane, "Não foi encontrado nenhum restaurante "
 								+ "com os filtros informados.");
-					} else {
-						RestauranteTableModel model = new RestauranteTableModel(restauranteEncontrado);
-						tableRestaurante.setModel(model);
 					}
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(contentPane, ex.getMessage());
@@ -134,6 +108,36 @@ public class ViewConsultaRestaurante extends JFrame {
 		btnListar.setBounds(477, 81, 100, 25);
 		contentPane.add(btnListar);
 		
+		
+		JButton btnEditar = new JButton("Editar");
+		btnEditar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int linhaSelecionada = tableRestaurante.getSelectedRow();
+				if(linhaSelecionada >= 0) {
+					RestauranteTableModel model = (RestauranteTableModel) tableRestaurante.getModel();
+					Restaurante restauranteSelecionado = model.getPor(linhaSelecionada);
+					ViewCadastroRestaurante view = new ViewCadastroRestaurante(ViewConsultaRestaurante.this);
+					view.setRestaurante(restauranteSelecionado);
+					setVisible(false);
+					view.setEdicaoRestaurante(true); 
+					view.setVisible(true);
+					/*SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>(){
+						protected Boolean doInBackground() throws Exception {
+							return pesquisa();
+						};
+					};
+					worker.execute();*/
+					
+					
+					setVisible(true);
+				} else {
+					JOptionPane.showMessageDialog(contentPane, "Selecione uma linha para edição.");
+				}
+			}
+		});
+		btnEditar.setBounds(321, 299, 117, 25);
+		contentPane.add(btnEditar);
+		
 		txtNome = new JTextField();
 		txtNome.setBounds(35, 81, 206, 25);
 		contentPane.add(txtNome);
@@ -141,7 +145,6 @@ public class ViewConsultaRestaurante extends JFrame {
 
 		cbCategorias = new JComboBox<Categoria>();
 		Categoria placeholder = new Categoria("Selecione...");
-		List<Categoria> categorias = categoriaService.listarTodas();
 		Utilitaria.preencherCombo(cbCategorias, categorias, placeholder);
 		cbCategorias.setBounds(252, 81, 210, 25);
 		contentPane.add(cbCategorias);
@@ -170,5 +173,14 @@ public class ViewConsultaRestaurante extends JFrame {
 		panel.setBorder(new TitledBorder(null, "A\u00E7\u00F5es", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setBounds(299, 282, 288, 60);
 		contentPane.add(panel);
+	}
+	
+	private boolean pesquisa() {
+		String filtroInformado = txtNome.getText();
+		Categoria categoriaInformada = (Categoria) cbCategorias.getSelectedItem();
+		List<Restaurante> restauranteEncontrado = restauranteService.listarPor(filtroInformado, categoriaInformada);
+		RestauranteTableModel model = new RestauranteTableModel(restauranteEncontrado);
+		tableRestaurante.setModel(model);
+		return !restauranteEncontrado.isEmpty();
 	}
 }

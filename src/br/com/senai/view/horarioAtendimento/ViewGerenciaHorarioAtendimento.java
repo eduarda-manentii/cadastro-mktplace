@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.time.DateTimeException;
@@ -32,9 +34,9 @@ import br.com.senai.core.domain.DiasDaSemana;
 import br.com.senai.core.domain.HorarioAtendimento;
 import br.com.senai.core.domain.Restaurante;
 import br.com.senai.core.service.HorarioAtendimentoService;
-import br.com.senai.core.service.RestauranteService;
 import br.com.senai.core.util.Utilitaria;
 import br.com.senai.view.componentes.table.HorarioAtendimentoTableModel;
+import javax.swing.border.TitledBorder;
 
 public class ViewGerenciaHorarioAtendimento extends JFrame {
 
@@ -47,14 +49,12 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 	private JTable tableHorarioAtendimento;
     private JProgressBar progressBar;
 	
-	private RestauranteService restauranteService;
 	private HorarioAtendimento horarioAtendimento;
 	private HorarioAtendimentoService horarioService;
 	private boolean isAlteracao = false;
 	private List<Component> camposManter = new ArrayList<>();
 	
-	public ViewGerenciaHorarioAtendimento() {
-		this.restauranteService = new RestauranteService();
+	public ViewGerenciaHorarioAtendimento(List<Restaurante> restaurantes) {
 		this.horarioService = new HorarioAtendimentoService();
 		
 		HorarioAtendimentoTableModel model = new HorarioAtendimentoTableModel(new ArrayList<HorarioAtendimento>());
@@ -62,7 +62,7 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		tableHorarioAtendimento.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		setTitle("Gerenciar horarios - Cadastro");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 780, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -80,7 +80,6 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		contentPane.add(lblRestaurante);
 		
 		cbRestaurantes = new JComboBox<Restaurante>();
-		List<Restaurante> restaurantes = restauranteService.listarTodas();
 		Restaurante placeholder = new Restaurante("Selecione...");
 		Utilitaria.preencherCombo(cbRestaurantes, restaurantes, placeholder);
 		cbRestaurantes.setBounds(147, 21, 601, 24);
@@ -88,7 +87,7 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		
 		progressBar = new JProgressBar();
         progressBar.setStringPainted(true);
-        add(progressBar, BorderLayout.SOUTH);
+        getContentPane().add(progressBar, BorderLayout.SOUTH);
 		
 		JLabel lblDiaSemana = new JLabel("Dia de Semana");
 		lblDiaSemana.setBounds(12, 71, 128, 15);
@@ -110,6 +109,13 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		txtAbertura.setBounds(341, 67, 101, 24);
 		contentPane.add(txtAbertura);
 		
+		txtAbertura.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+            	txtAbertura.setCaretPosition(0); 
+            }
+        });
+		
 		try {
 			MaskFormatter mascaraHora = new MaskFormatter("##:##");
 	        mascaraHora.install(txtAbertura);
@@ -124,6 +130,13 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		txtFechamento = new JFormattedTextField();
 		txtFechamento.setBounds(548, 67, 93, 24);
 		contentPane.add(txtFechamento);
+		
+		txtFechamento.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+            	txtFechamento.setCaretPosition(0); 
+            }
+        });
 		
 		try {
 			MaskFormatter mascaraHora = new MaskFormatter("##:##");
@@ -161,10 +174,6 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
                         horarioAtendimento = new HorarioAtendimento(diasDaSemana, horaAbertura, horaFechamento, restaurante);
                         horarioService.salvar(horarioAtendimento);
                         JOptionPane.showMessageDialog(contentPane, "Horario de atendimento salvo.");
-                        Restaurante restaurante2 = (Restaurante) cbRestaurantes.getSelectedItem();
-                        atualizaTabelaHorarios(restaurante2);
-                        camposManter.add(cbRestaurantes);
-                        Utilitaria.limparCampos(contentPane, camposManter);
 	            	} else {
                         horarioAtendimento.setRestaurante(restaurante);
                         horarioAtendimento.setDiaSemana(diasDaSemana);
@@ -173,10 +182,13 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
                         horarioService.salvar(horarioAtendimento);
                         JOptionPane.showMessageDialog(contentPane, "Horario de atendimento alterada com sucesso!");
                         isAlteracao = false;
-                        camposManter.add(cbRestaurantes);
-                        Utilitaria.limparCampos(contentPane, camposManter);
-                        atualizaTabelaHorarios(restaurante);
-		        } 
+                       
+	            	} 
+	            	
+	            	atualizaTabelaHorarios(restaurante);
+                    camposManter.add(cbRestaurantes);
+                    Utilitaria.limparCampos(contentPane, camposManter);
+                    
 	            	} catch (DateTimeException ex) {
 		            JOptionPane.showMessageDialog(contentPane, "Digite um valor para a hora válido.");
 				}catch (Exception ex) {
@@ -187,6 +199,12 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 
 		btnSalvar.setBounds(653, 66, 101, 25);
 		contentPane.add(btnSalvar);
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Ações", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBounds(530, 165, 195, 96);
+		contentPane.add(panel);
+		panel.setLayout(null);
 		
 		JButton btnEditar = new JButton("Editar");
 		btnEditar.addActionListener(new ActionListener() {
@@ -207,12 +225,12 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		        }
 		    }
 		});
-
-
-		btnEditar.setBounds(536, 181, 183, 25);
-		contentPane.add(btnEditar);
+		btnEditar.setBounds(6, 16, 183, 25);
+		panel.add(btnEditar);
 		
 		JButton btnExcluir = new JButton("Excluir");
+		btnExcluir.setBounds(6, 65, 183, 25);
+		panel.add(btnExcluir);
 		btnExcluir.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
@@ -226,6 +244,8 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		                try {
 		                    horarioService.excluirPor(horarioAtendimentoSelecionado.getId());
 		                    model.removePor(linhaSelecionada);
+							camposManter.add(cbRestaurantes);
+							Utilitaria.limparCampos(contentPane, camposManter);
 		                    JOptionPane.showMessageDialog(contentPane, "Horário de atendimento excluído.");
 		                } catch (Exception ex) {
 		                    JOptionPane.showMessageDialog(contentPane, ex.getMessage());
@@ -236,9 +256,6 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		        }
 		    }
 		});
-
-		btnExcluir.setBounds(536, 230, 183, 25);
-		contentPane.add(btnExcluir);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBounds(631, 313, 117, 25);
@@ -256,7 +273,6 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		scrollPane.setBounds(20, 160, 443, 191);
 		contentPane.add(scrollPane);
 		
-		this.restauranteService = new RestauranteService();
 		this.horarioService = new HorarioAtendimentoService();
 	}
 	

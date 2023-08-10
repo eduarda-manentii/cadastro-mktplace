@@ -1,9 +1,11 @@
 package br.com.senai.view.categoria;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -16,7 +18,7 @@ import br.com.senai.core.domain.Categoria;
 import br.com.senai.core.service.CategoriaService;
 import br.com.senai.core.util.Utilitaria;
 
-public class ViewCadastroCategoria extends JFrame {
+public class ViewCadastroCategoria extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -27,7 +29,8 @@ public class ViewCadastroCategoria extends JFrame {
 	private CategoriaService service;
 	private boolean isEdicaoCategoria;
 
-	public ViewCadastroCategoria() {
+	public ViewCadastroCategoria(Window owner) {
+		super(owner);
 		this.service = new CategoriaService();
 		setResizable(false);
 		setTitle("Gerenciar Categoria - Cadastro");
@@ -39,6 +42,7 @@ public class ViewCadastroCategoria extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
+		setModal(true);
 		
 		txtCategoria = new JTextField();
 		txtCategoria.setBounds(24, 96, 383, 31);
@@ -53,8 +57,6 @@ public class ViewCadastroCategoria extends JFrame {
 		JButton btnPesquisar = new JButton("Pesquisar");
 		btnPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ViewPesquisaCategoria view = new ViewPesquisaCategoria();
-				view.setVisible(true);
 				dispose();
 			}
 		});
@@ -65,7 +67,7 @@ public class ViewCadastroCategoria extends JFrame {
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				txtCategoria.setText(null);
+				Utilitaria.limparCampos(contentPane);
 			}
 		});
 		btnCancelar.setBounds(178, 226, 117, 25);
@@ -83,12 +85,11 @@ public class ViewCadastroCategoria extends JFrame {
 			            categoria = new Categoria(nome);
 				        service.salvar(categoria);
 			            JOptionPane.showMessageDialog(contentPane, "Categoria salva.");
-			            categoria = null;
 			        	Utilitaria.limparCampos(contentPane);
 			        } else {
+			        	categoria.setNome(nome);
 				        service.salvar(categoria);
 			            JOptionPane.showMessageDialog(contentPane, "Categoria alterada.");
-			            categoria.setNome(nome);
 			        }
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(contentPane, ex.getMessage());

@@ -38,19 +38,17 @@ public class RestauranteService {
 		        throw new IllegalArgumentException("O nome não pode ser vazio"
 		                + " e aceita até 250 caracteres.");
 		    }
+		    
+		    boolean isCategoriaInvalida = (restaurante.getCategoria() == null) 
+		    		|| restaurante.getCategoria().getId() <= 0;
+		    if (isCategoriaInvalida) {
+		        throw new IllegalArgumentException("A categoria é obrigatória.");
+		    }
 
 		    boolean isDescricaoInvalida = restaurante.getDescricao() == null 
 		    		|| restaurante.getDescricao().isBlank();
 		    if (isDescricaoInvalida) {
 		        throw new IllegalArgumentException("A descrição é obrigatória.");
-		    }
-
-		    boolean isBairroInvalido = restaurante.getEndereco().getBairro() == null 
-		    		|| restaurante.getEndereco().getBairro().isBlank()
-		            || restaurante.getEndereco().getBairro().length() > 50;
-		    if (isBairroInvalido) {
-		        throw new IllegalArgumentException("O bairro é obrigatório e deve conter"
-		                + " até 50 caracteres.");
 		    }
 
 		    boolean isLogradouroInvalido = restaurante.getEndereco().getLongradouro() == null 
@@ -68,13 +66,15 @@ public class RestauranteService {
 		        throw new IllegalArgumentException("A cidade é obrigatória e deve conter"
 		                + " até 80 caracteres.");
 		    }
-
-		    boolean isCategoriaInvalida = (restaurante.getCategoria() == null) 
-		    		|| restaurante.getCategoria().getId() <= 0;
-		    if (isCategoriaInvalida) {
-		        throw new IllegalArgumentException("A categoria é obrigatória.");
+		    
+		    boolean isBairroInvalido = restaurante.getEndereco().getBairro() == null 
+		    		|| restaurante.getEndereco().getBairro().isBlank()
+		            || restaurante.getEndereco().getBairro().length() > 50;
+		    if (isBairroInvalido) {
+		        throw new IllegalArgumentException("O bairro é obrigatório e deve conter"
+		                + " até 50 caracteres.");
 		    }
-
+		    
 		} else {
 		    throw new NullPointerException("O restaurante não pode ser nulo.");
 		}

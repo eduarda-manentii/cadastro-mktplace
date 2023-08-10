@@ -58,9 +58,9 @@ public class CategoriaService {
 		}
 	}
 	
-	public Categoria buscarPor(int id) {
-		if (id > 0) {
-			Categoria categoriaEncontrada = this.daoCategoria.buscarPor(id);
+	public Categoria buscarPor(int idDaCategoria) {
+		if (idDaCategoria > 0) {
+			Categoria categoriaEncontrada = this.daoCategoria.buscarPor(idDaCategoria);
 			if(categoriaEncontrada == null) {
 				throw new IllegalArgumentException("Não foi encontrada uma categoria com o código informado.");
 			}
