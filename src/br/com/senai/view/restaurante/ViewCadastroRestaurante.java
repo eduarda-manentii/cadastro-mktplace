@@ -22,6 +22,7 @@ import br.com.senai.core.domain.Restaurante;
 import br.com.senai.core.service.CategoriaService;
 import br.com.senai.core.service.RestauranteService;
 import br.com.senai.core.util.Utilitaria;
+import br.com.senai.core.util.api.EnviarEmail;
 
 public class ViewCadastroRestaurante extends JDialog {
 
@@ -84,6 +85,8 @@ public class ViewCadastroRestaurante extends JDialog {
 				        restaurante = new Restaurante(nome, descricao, endereco, categoria);
 				        restauranteService.salvar(restaurante);
 				        JOptionPane.showMessageDialog(contentPane, "Restaurante salvo.");
+                        String mensagemFormata =  formatarEnvio(restaurante);
+                        EnviarEmail.enviarEmail(mensagemFormata, false);
 				        Utilitaria.limparCampos(contentPane);
 				    } else {
 				    	Endereco enderecoTemp = new Endereco(cidade, logradouro, bairro, complemento);
@@ -212,5 +215,25 @@ public class ViewCadastroRestaurante extends JDialog {
 	 public void setEdicaoRestaurante(boolean isEdicaoRestaurante) {
 	        this.isEdicaoRestaurante = isEdicaoRestaurante;
 	    }
+	 
+	
+	 public static String formatarEnvio(Restaurante restaurante) {
+		    StringBuilder emailContent = new StringBuilder();
+		    emailContent.append("<div style='font-family: Arial, sans-serif; padding: 20px;'>");
+		    emailContent.append("<p>Um novo restaurante foi cadastrado com as seguintes informações:</p>");
+		    emailContent.append("<ul style='list-style-type: disc; padding-left: 20px;'>");
+		    emailContent.append("<li><b>Nome do Restaurante:</b> ").append(restaurante.getNome()).append("</li>");
+		    emailContent.append("<li><b>Categoria:</b> ").append(restaurante.getCategoria()).append("</li>");
+		    emailContent.append("<li><b>Descrição:</b> ").append(restaurante.getDescricao()).append("</li>");
+		    emailContent.append("<li><b>Logradouro:</b> ").append(restaurante.getEndereco().getLongradouro()).append("</li>");
+		    emailContent.append("<li><b>Cidade:</b> ").append(restaurante.getEndereco().getCidade()).append("</li>");
+		    emailContent.append("<li><b>Bairro:</b> ").append(restaurante.getEndereco().getBairro()).append("</li>");
+		    if (!restaurante.getEndereco().getComplemento().isEmpty()) {
+		        emailContent.append("<li><b>Complemento:</b> ").append(restaurante.getEndereco().getComplemento()).append("</li>");
+		    }
+		    emailContent.append("</ul>");
+		    emailContent.append("</div>");
+		    return emailContent.toString();
+		}
 	
 }

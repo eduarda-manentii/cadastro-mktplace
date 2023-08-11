@@ -1,0 +1,20 @@
+/* styles.css */
+.horarios-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.horarios-table th, .horarios-table td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+.horarios-table th {
+    background-color: purple;
+    color: white;
+}
+
+.dia-semana, .hora-abertura, .hora-fechamento {
+    text-align: center;
+}
+

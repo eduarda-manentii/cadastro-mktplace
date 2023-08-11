@@ -27,6 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
 
 import br.com.senai.core.domain.ComparacaoDeHorario;
@@ -35,8 +36,8 @@ import br.com.senai.core.domain.HorarioAtendimento;
 import br.com.senai.core.domain.Restaurante;
 import br.com.senai.core.service.HorarioAtendimentoService;
 import br.com.senai.core.util.Utilitaria;
+import br.com.senai.core.util.api.EnviarEmail;
 import br.com.senai.view.componentes.table.HorarioAtendimentoTableModel;
-import javax.swing.border.TitledBorder;
 
 public class ViewGerenciaHorarioAtendimento extends JFrame {
 
@@ -184,10 +185,15 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
                         horarioAtendimento.setHoraAbertura(horaAbertura);
                         horarioAtendimento.setHoraFechamento(horaFechamento);
                         horarioService.salvar(horarioAtendimento);
+                		List<HorarioAtendimento> horarioEncontrado = horarioService.listarPor(restaurante);
+                        String tabelaHorarios = formatarTabelaHorarios(horarioEncontrado);
+                        String mensagem = "O restaurante " + restaurante.getNome() +
+                                " teve seu horário de atendimento alterado. Novos horários:<br>" +
+                                tabelaHorarios;
+                        EnviarEmail.enviarEmail(mensagem, true);
                         JOptionPane.showMessageDialog(contentPane, "Horario de atendimento alterada com sucesso!");
                         isAlteracao = false;
-                       
-	            	} 
+                    } 
 	            	
 	            	atualizaTabelaHorarios(restaurante);
                     camposManter.add(cbRestaurantes);
@@ -323,5 +329,44 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		}
 	}
 	
+	public static String formatarTabelaHorarios(List<HorarioAtendimento> horarios) {
+	    StringBuilder tabela = new StringBuilder();
+
+	    tabela.append("<table style='width:30%; border-collapse:collapse; text-align:center;'>");
+	    tabela.append("<tr><th style='background-color:purple; color:white; border: 1px solid black; width:20%;'>Dia da Semana</th><th style='background-color:purple; color:white; border: 1px solid black; width:40%;'>Horário de Abertura</th><th style='background-color:purple; color:white; border: 1px solid black; width:40%;'>Horário de  Fechamento</th></tr>");
+
+	    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+	    DiasDaSemana diaAnterior = null;
+	    
+	    for (HorarioAtendimento horario : horarios) {
+	        tabela.append("<tr>");
+	        if (diaAnterior == null || !diaAnterior.equals(horario.getDiaSemana())) {
+	            int rowspan = contarLinhasMesmoDia(horarios, horario.getDiaSemana());
+	            tabela.append("<td rowspan='" + rowspan + "' style='border: 1px solid black; text-align:left;'>")
+	                  .append(horario.getDiaSemana())
+	                  .append("</td>");
+	            diaAnterior = horario.getDiaSemana();
+	        }
+	        
+	        tabela.append("<td style='border: 1px solid black;'>").append(horario.getHoraAbertura().format(dtf)).append("</td>");
+	        tabela.append("<td style='border: 1px solid black;'>").append(horario.getHoraFechamento().format(dtf)).append("</td>");
+	        tabela.append("</tr>");
+	    }
+
+	    tabela.append("</table>");
+	    return tabela.toString();
+	}
+
+	private static int contarLinhasMesmoDia(List<HorarioAtendimento> horarios, DiasDaSemana diasDaSemana) {
+	    int count = 0;
+	    for (HorarioAtendimento horario : horarios) {
+	        if (horario.getDiaSemana().equals(diasDaSemana)) {
+	            count++;
+	        }
+	    }
+	    return count;
+	}
+
+
 
 }
