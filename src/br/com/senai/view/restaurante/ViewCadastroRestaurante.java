@@ -61,7 +61,18 @@ public class ViewCadastroRestaurante extends JDialog {
 		JButton btnPesquisar = new JButton("Pesquisar");
 		btnPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				if(isCamposPreenchidos() == true) {
+					int opcao = JOptionPane.showConfirmDialog(
+							contentPane, 
+							"Tem certeza que deseja descartar as informações?",
+							"Confirmação",
+							JOptionPane.YES_NO_OPTION);
+					if(opcao == 0) {
+						dispose();
+					}
+				} else {
+					dispose();
+				}
 			}
 		});
 		btnPesquisar.setBounds(356, 12, 117, 25);
@@ -71,14 +82,15 @@ public class ViewCadastroRestaurante extends JDialog {
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-				    String nome = txtNome.getText();
+
+					String nome = txtNome.getText();
 				    String descricao = txtDescricao.getText();
 				    String logradouro = txtLogradouro.getText();
 				    String cidade = txtCidade.getText();
 				    String bairro = txtBairro.getText();
 				    String complemento = txtComplemento.getText();
 				    Categoria categoria = (Categoria) cbCategorias.getSelectedItem();
-
+					
 				    if (!isEdicaoRestaurante) {
 				        Endereco endereco = new Endereco(cidade, logradouro, bairro, complemento);
 				        restaurante = new Restaurante(nome, descricao, endereco, categoria);
@@ -212,5 +224,27 @@ public class ViewCadastroRestaurante extends JDialog {
 	 public void setEdicaoRestaurante(boolean isEdicaoRestaurante) {
 	        this.isEdicaoRestaurante = isEdicaoRestaurante;
 	    }
+	 
+	 
+	 private boolean isCamposPreenchidos() {
+		String nome = txtNome.getText();
+	    String descricao = txtDescricao.getText();
+	    String logradouro = txtLogradouro.getText();
+	    String cidade = txtCidade.getText();
+	    String bairro = txtBairro.getText();
+	    String complemento = txtComplemento.getText();
+	    Categoria categoria = (Categoria) cbCategorias.getSelectedItem();
+	    
+	    if(nome.isEmpty() && descricao.isEmpty()
+	    		&& logradouro.isEmpty() && cidade.isEmpty()
+	    		&& 	bairro.isEmpty() && complemento.isEmpty()
+	    		&& categoria.equals(null)) {
+	    	return false;
+	    } else {
+	    	return true;
+	    }
+	    
+		 
+	 }
 	
 }
