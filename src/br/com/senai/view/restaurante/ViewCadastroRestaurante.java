@@ -244,7 +244,6 @@ public class ViewCadastroRestaurante extends JDialog {
 	    	return true;
 	    }
 	    
-		 
 	 }
 	
 }
