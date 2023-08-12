@@ -38,6 +38,7 @@ public class ViewInicial extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setToolTipText("");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		System.out.println();
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
