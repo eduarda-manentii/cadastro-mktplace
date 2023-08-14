@@ -18,8 +18,6 @@ public class DaoPostgresqlCategoria implements DaoCategoria {
 	
 	private final String DELETE = "DELETE FROM categorias WHERE id = ?";
 	
-	private final String SELECT_BY_ID = "SELECT cat.id, cat.nome FROM categorias cat WHERE cat.id = ?";
-	
 	private final String SELECT_BY_NOME = "SELECT cat.id, cat.nome FROM categorias cat "
 			+ " WHERE Upper(cat.nome) LIKE Upper(?) ORDER BY cat.nome";
 	
@@ -87,26 +85,6 @@ public class DaoPostgresqlCategoria implements DaoCategoria {
 					+ "Motivo: " + ex.getMessage());
 		} finally {
 			ManagerDb.getInstance().fechar(ps);
-		}
-	}
-	
-	public Categoria buscarPor(int id) {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			ps = conexao.prepareStatement(SELECT_BY_ID);
-			ps.setInt(1, id);
-			rs = ps.executeQuery();
-			if (rs.next()) {
-				return extrairDo(rs);
-			}
-			return null;
-		} catch (Exception ex) {
-			throw new RuntimeException("Ocorreu um erro ao"
-					+ " buscar a categoria. Motivo: " + ex.getMessage());
-		} finally {
-			ManagerDb.getInstance().fechar(ps);
-			ManagerDb.getInstance().fechar(rs);
 		}
 	}
 	

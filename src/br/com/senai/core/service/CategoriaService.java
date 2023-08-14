@@ -58,18 +58,6 @@ public class CategoriaService {
 		}
 	}
 	
-	public Categoria buscarPor(int idDaCategoria) {
-		if (idDaCategoria > 0) {
-			Categoria categoriaEncontrada = this.daoCategoria.buscarPor(idDaCategoria);
-			if(categoriaEncontrada == null) {
-				throw new IllegalArgumentException("Não foi encontrada uma categoria com o código informado.");
-			}
-			return categoriaEncontrada;
-		} else {
-			throw new IllegalArgumentException("O id da categoria deve ser maior que zero.");
-		}
-	}
-	
 	public List<Categoria> listarPor(String nome) {
 		if(nome != null && !nome.isBlank() && nome.length() >= 3) {
 			String filtro = nome + "%";

@@ -16,6 +16,8 @@ import br.com.senai.core.domain.Categoria;
 import br.com.senai.core.domain.Restaurante;
 import br.com.senai.core.service.CategoriaService;
 import br.com.senai.core.service.RestauranteService;
+import br.com.senai.core.util.Utilitaria;
+import br.com.senai.view.acesso.ViewLoginAdministrador;
 import br.com.senai.view.categoria.ViewConsultaCategoria;
 import br.com.senai.view.horarioAtendimento.ViewGerenciaHorarioAtendimento;
 import br.com.senai.view.progresso.ViewProgressoInfinito;
@@ -63,13 +65,14 @@ public class ViewInicial extends JFrame {
 		JMenuItem mntRestaurante = new JMenuItem("Restaurantes");
 		mntRestaurante.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				ViewProgressoInfinito.chamaMetodoComProgresso(ViewInicial.this, () -> {
-                    return categoriaService.listarTodas();
-				}, (List<Categoria> categorias) -> {
-					ViewConsultaRestaurante view = new ViewConsultaRestaurante(categorias);
-                    view.setVisible(true);
-				});
+			    ViewProgressoInfinito.mostraProgresso(ViewInicial.this); 
+			    Utilitaria.executarAmbos(ViewInicial.this, () -> {
+			        return categoriaService.listarTodas();
+			    }, (List<Categoria> categorias) -> {
+			        ViewProgressoInfinito.fechaProgresso(); 
+			        ViewConsultaRestaurante view = new ViewConsultaRestaurante(categorias);
+			        view.setVisible(true);
+			    });
 			}
 		});
 		mnCadastros.add(mntRestaurante);
@@ -80,16 +83,29 @@ public class ViewInicial extends JFrame {
 		JMenuItem mntHorario = new JMenuItem("Horarios");
 		mntHorario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				ViewProgressoInfinito.chamaMetodoComProgresso(ViewInicial.this,() -> {
+			    ViewProgressoInfinito.mostraProgresso(ViewInicial.this); 
+				Utilitaria.executarAmbos(ViewInicial.this,() -> {
                     return restauranteService.listarTodas();
 				}, (List<Restaurante> restaurantes) -> {
+			        ViewProgressoInfinito.fechaProgresso(); 
 					ViewGerenciaHorarioAtendimento view = new ViewGerenciaHorarioAtendimento(restaurantes);
 					view.setVisible(true);
 				});
 			}
 		});
 		mnConfigurações.add(mntHorario);
+		
+		JMenu mnNotificação = new JMenu("Notifica\u00E7\u00E3o");
+		menuBar.add(mnNotificação);
+		
+		JMenuItem mniConfiguração = new JMenuItem("Configurar notifica\u00E7\u00E3o");
+		mniConfiguração.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ViewLoginAdministrador view = new ViewLoginAdministrador(ViewInicial.this);
+				view.setVisible(true);
+			}
+		});
+		mnNotificação.add(mniConfiguração);
 		
 		JMenuItem mntSair = new JMenuItem("Sair");
 		mntSair.setHorizontalAlignment(SwingConstants.LEFT);

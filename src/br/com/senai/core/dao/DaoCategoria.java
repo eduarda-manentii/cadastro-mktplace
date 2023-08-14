@@ -9,8 +9,6 @@ public interface DaoCategoria {
 	public void inserir(Categoria categoria);
 	public void alterar(Categoria  categoria);
 	public void excluirPor(int id);
-	public Categoria buscarPor(int id);
 	public List<Categoria> listarPor(String nome);
 	public List<Categoria> listarTodas();
-	
 }
