@@ -1,5 +1,9 @@
 config.properties
 bin/
-*.settings/
+.git
+.settings
 *.class
+*.prefs
+.gitattributes
 *.metadata/
+.jar
