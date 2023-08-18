@@ -1,4 +1,5 @@
 config.properties
 bin/
-.settings/
+*.settings/
 *.class
+*.metadata/
