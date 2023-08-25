@@ -2,6 +2,8 @@ package br.com.senai.core.service;
 
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
 import br.com.senai.core.dao.DaoCategoria;
 import br.com.senai.core.dao.DaoRestaurante;
 import br.com.senai.core.dao.FactoryDao;
@@ -28,43 +30,32 @@ public class CategoriaService {
 	}
 	
 	public void validar(Categoria categoria) {
-		if(categoria != null) {
+		Preconditions.checkNotNull(categoria, "A categoria nao pode ser nula.");
 			boolean isNomeInvalido = categoria.getNome() == null
 					|| categoria.getNome().isBlank()
 					|| categoria.getNome().length() > 100
 					|| categoria.getNome().length() < 3;
 					
-			if (isNomeInvalido) {
-				throw new IllegalArgumentException("O nome da categoria deve possuir"
-						+ " entre 3 a 100 caracteres.");
-			}
-			
-		} else {
-			throw new NullPointerException("A categoria n„o pode ser nula.");
-		}
+		Preconditions.checkArgument(!isNomeInvalido, "O nome da categoria deve possuir"
+			+ " entre 3 a 100 caracteres.");
 	}
 	
 	public void excluirPor(int idCategoria) {
-		if (idCategoria > 0) {
-			boolean isRemocaoInvalida = daoRestaurante.validarRemocao(idCategoria);
-			if (isRemocaoInvalida) {
-				throw new IllegalArgumentException("N„o È possÌvel remover uma"
-						+ " categoria vinculada a um restaurante.");
-			}
-			this.daoCategoria.excluirPor(idCategoria);
-		} else {
-			throw new IllegalArgumentException("O id para remoÁ„o"
-					+ " da categoria deve ser maior que 0.");
-		}
+		Preconditions.checkArgument(idCategoria > 0, "O id para remo√ß√£o"
+				+ " da categoria deve ser maior que 0.");
+		
+		boolean isRemocaoInvalida = daoRestaurante.validarRemocao(idCategoria);
+		Preconditions.checkArgument(!isRemocaoInvalida, "Nao √© poss√≠vel remover uma"
+				+ " categoria vinculada a um restaurante.");
+		
+		this.daoCategoria.excluirPor(idCategoria);
 	}
 	
 	public List<Categoria> listarPor(String nome) {
-		if(nome != null && !nome.isBlank() && nome.length() >= 3) {
-			String filtro = nome + "%";
-			return daoCategoria.listarPor(filtro);
-		} else {
-			throw new IllegalArgumentException("O filtro para listagem È obrigatÛrio e deve ter mais que 2 caracteres.");
-		}
+		Boolean isFiltroValido = nome != null && !nome.isBlank() && nome.length() >= 3;
+		Preconditions.checkArgument(isFiltroValido, "O filtro para listagem √© obrigat√≥rio e deve ter mais que 2 caracteres.");
+		String filtro = nome + "%";
+		return daoCategoria.listarPor(filtro);
 	}
 	
 	public List<Categoria> listarTodas() {

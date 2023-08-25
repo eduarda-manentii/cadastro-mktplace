@@ -3,7 +3,6 @@ package br.com.senai.core.domain;
 import java.util.Objects;
 
 public class Categoria {
-	
 	private int id;
 	private String nome;
 	

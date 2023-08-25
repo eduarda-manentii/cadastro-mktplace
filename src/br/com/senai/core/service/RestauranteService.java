@@ -2,6 +2,8 @@ package br.com.senai.core.service;
 
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
 import br.com.senai.core.dao.DaoHorarioAtendimento;
 import br.com.senai.core.dao.DaoRestaurante;
 import br.com.senai.core.dao.FactoryDao;
@@ -29,62 +31,44 @@ public class RestauranteService {
 	}
 
 	public void validar(Restaurante restaurante) {
-		if (restaurante != null) {
-			boolean isNomeInvalido = restaurante.getNome() == null || restaurante.getNome().isBlank()
-					|| restaurante.getNome().length() > 250 || restaurante.getNome() == null;
-			if (isNomeInvalido) {
-				throw new IllegalArgumentException("O nome n„o pode ser vazio" + " e aceita atÈ 250 caracteres.");
-			}
-
-			boolean isCategoriaInvalida = (restaurante.getCategoria() == null)
-					|| restaurante.getCategoria().getId() <= 0;
-			if (isCategoriaInvalida) {
-				throw new IllegalArgumentException("A categoria È obrigatÛria.");
-			}
-
-			boolean isDescricaoInvalida = restaurante.getDescricao() == null || restaurante.getDescricao().isBlank();
-			if (isDescricaoInvalida) {
-				throw new IllegalArgumentException("A descriÁ„o È obrigatÛria.");
-			}
-
-			boolean isLogradouroInvalido = restaurante.getEndereco().getLongradouro() == null
-					|| restaurante.getEndereco().getLongradouro().isBlank()
-					|| restaurante.getEndereco().getLongradouro().length() > 200;
-			if (isLogradouroInvalido) {
-				throw new IllegalArgumentException("O logradouro È obrigatÛrio e deve conter" + " atÈ 200 caracteres.");
-			}
-
-			boolean isCidadeInvalida = restaurante.getEndereco().getCidade() == null
-					|| restaurante.getEndereco().getCidade().isBlank()
-					|| restaurante.getEndereco().getCidade().length() > 80;
-			if (isCidadeInvalida) {
-				throw new IllegalArgumentException("A cidade È obrigatÛria e deve conter" + " atÈ 80 caracteres.");
-			}
-
-			boolean isBairroInvalido = restaurante.getEndereco().getBairro() == null
-					|| restaurante.getEndereco().getBairro().isBlank()
-					|| restaurante.getEndereco().getBairro().length() > 50;
-			if (isBairroInvalido) {
-				throw new IllegalArgumentException("O bairro È obrigatÛrio e deve conter" + " atÈ 50 caracteres.");
-			}
-
-		} else {
-			throw new NullPointerException("O restaurante n„o pode ser nulo.");
-		}
-
+		Preconditions.checkNotNull(restaurante, "O restaurante n√£o pode ser nulo.");
+		
+		boolean isNomeInvalido = restaurante.getNome() == null || restaurante.getNome().isBlank()
+				|| restaurante.getNome().length() > 250 || restaurante.getNome() == null;
+		Preconditions.checkArgument(!isNomeInvalido, "O nome n√£o pode ser vazio e aceita at√© 250 caracteres.");
+		
+		boolean isCategoriaInvalida = (restaurante.getCategoria() == null)
+				|| restaurante.getCategoria().getId() <= 0;
+		Preconditions.checkArgument(!isCategoriaInvalida, "A categoria √© obrigat√≥ria.");
+		
+		boolean isDescricaoInvalida = restaurante.getDescricao() == null || restaurante.getDescricao().isBlank();
+		Preconditions.checkArgument(!isDescricaoInvalida, "A descri√ß√£o √© obrigat√≥ria.");
+		
+		boolean isLogradouroInvalido = restaurante.getEndereco().getLongradouro() == null
+				|| restaurante.getEndereco().getLongradouro().isBlank()
+				|| restaurante.getEndereco().getLongradouro().length() > 200;
+		Preconditions.checkArgument(!isLogradouroInvalido, "O logradouro √© obrigat√≥rio e deve conter at√© 200 caracteres.");
+		
+		boolean isCidadeInvalida = restaurante.getEndereco().getCidade() == null
+				|| restaurante.getEndereco().getCidade().isBlank()
+				|| restaurante.getEndereco().getCidade().length() > 80;
+		Preconditions.checkArgument(!isCidadeInvalida, "A cidade √© obrigat√≥ria e deve conter at√© 80 caracteres.");
+		
+		boolean isBairroInvalido = restaurante.getEndereco().getBairro() == null
+				|| restaurante.getEndereco().getBairro().isBlank()
+				|| restaurante.getEndereco().getBairro().length() > 50;
+		Preconditions.checkArgument(!isBairroInvalido, "O bairro √© obrigat√≥rio e deve conter at√© 50 caracteres.");
 	}
 
 	public void excluirPor(int idRestaurante) {
-		if (idRestaurante > 0) {
-			boolean isRemocaoInvalida = daoHorarioAtendimento.validarRemocao(idRestaurante);
-			if (isRemocaoInvalida) {
-				throw new IllegalArgumentException(
-						"N„o È possÌvel remover uma" + " restaurante vinculada a um hor·rio de atendimento.");
-			}
-			this.daoRestaurante.excluirPor(idRestaurante);
-		} else {
-			throw new IllegalArgumentException("O id para remoÁ„o" + " da categoria deve ser maior que 0.");
-		}
+		Preconditions.checkArgument(idRestaurante > 0, "O id para remo√ß√£o"
+				+ " do restaurante deve ser maior que 0.");
+		
+		boolean isRemocaoInvalida = daoHorarioAtendimento.validarRemocao(idRestaurante);
+		Preconditions.checkArgument(!isRemocaoInvalida, "Nao √© poss√≠vel remover um"
+				+ " restaurante vinculada a um h√≥rario de atendimento.");
+		
+		this.daoRestaurante.excluirPor(idRestaurante);
 	}
 
 	public List<Restaurante> listarPor(String nome, Categoria categoria) {
