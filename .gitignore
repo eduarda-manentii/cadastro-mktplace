@@ -6,4 +6,5 @@ bin/
 *.prefs
 .gitattributes
 *.metadata/
-.jar
+*.jar
+/target/

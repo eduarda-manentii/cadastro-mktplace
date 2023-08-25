@@ -29,7 +29,7 @@ public class EnviarSMS {
         MediaType JSON = MediaType.parse("application/x-www-form-urlencoded");
         String postData = "To=" + toPhoneNumber + "&From=" + fromPhoneNumber + "&Body=" + mensagem;
         
-        RequestBody body = RequestBody.create(postData, JSON);
+        RequestBody body = RequestBody.create(JSON, postData);
 
         Request request = new Request.Builder()
                 .url(twilioUrl)

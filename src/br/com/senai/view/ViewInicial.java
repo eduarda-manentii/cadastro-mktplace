@@ -77,8 +77,8 @@ public class ViewInicial extends JFrame {
 		});
 		mnCadastros.add(mntRestaurante);
 		
-		JMenu mnConfigurações = new JMenu("Configura\u00E7\u00F5es");
-		menuBar.add(mnConfigurações);
+		JMenu mnConfiguracoes = new JMenu("Configura\u00E7\u00F5es");
+		menuBar.add(mnConfiguracoes);
 		
 		JMenuItem mntHorario = new JMenuItem("Horarios");
 		mntHorario.addActionListener(new ActionListener() {
@@ -93,19 +93,19 @@ public class ViewInicial extends JFrame {
 				});
 			}
 		});
-		mnConfigurações.add(mntHorario);
+		mnConfiguracoes.add(mntHorario);
 		
-		JMenu mnNotificação = new JMenu("Notifica\u00E7\u00E3o");
-		menuBar.add(mnNotificação);
+		JMenu mnNotificao = new JMenu("Notifica\u00E7\u00E3o");
+		menuBar.add(mnNotificao);
 		
-		JMenuItem mniConfiguração = new JMenuItem("Configurar notifica\u00E7\u00E3o");
-		mniConfiguração.addActionListener(new ActionListener() {
+		JMenuItem mniConfigurao = new JMenuItem("Configurar notifica\u00E7\u00E3o");
+		mniConfigurao.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ViewLoginAdministrador view = new ViewLoginAdministrador(ViewInicial.this);
 				view.setVisible(true);
 			}
 		});
-		mnNotificação.add(mniConfiguração);
+		mnNotificao.add(mniConfigurao);
 		
 		JMenuItem mntSair = new JMenuItem("Sair");
 		mntSair.setHorizontalAlignment(SwingConstants.LEFT);

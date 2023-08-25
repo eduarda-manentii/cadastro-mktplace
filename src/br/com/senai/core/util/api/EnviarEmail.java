@@ -25,7 +25,7 @@ public class EnviarEmail {
 
         String url = "https://api.sendgrid.com/v3/mail/send";
         String token = prop.getProperty("token");
-        String subject = isAlteracao ? "Ei! Alguém mexeu em um restaurante." : "Eba! Tem um novo restaurante no sistema.";
+        String subject = isAlteracao ? "Ei! Alguï¿½m mexeu em um restaurante." : "Eba! Tem um novo restaurante no sistema.";
         String body = String.format(
             "{\"personalizations\":[{\"to\":["
             + "{\"email\":\"%s\",\"name\":\"" + nomeRemetente  + "\"}],\"subject\":\"%s\"}],"
@@ -35,7 +35,7 @@ public class EnviarEmail {
             adminEmail, subject, mensagem
         );
 
-        RequestBody requestBody = RequestBody.create(body, JSON);
+        RequestBody requestBody = RequestBody.create(JSON, body);
         Request request = new Request.Builder().url(url).post(requestBody)
                 .addHeader("Authorization", "Bearer " + token)
                 .addHeader("Content-Type", "application/json")

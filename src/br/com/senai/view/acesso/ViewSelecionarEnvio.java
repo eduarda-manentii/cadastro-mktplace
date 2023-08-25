@@ -33,12 +33,12 @@ public class ViewSelecionarEnvio extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JLabel lblConfigurarNotificação = new JLabel("Configurar envio de notifica\u00E7\u00E3o");
-		lblConfigurarNotificação.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblConfigurarNotificação.setBounds(69, 35, 324, 22);
-		contentPane.add(lblConfigurarNotificação);
+		JLabel lblConfigurarNotificao = new JLabel("Configurar envio de notifica\u00E7\u00E3o");
+		lblConfigurarNotificao.setFont(new Font("Dialog", Font.BOLD, 16));
+		lblConfigurarNotificao.setBounds(69, 35, 324, 22);
+		contentPane.add(lblConfigurarNotificao);
 
-		JLabel lblMetodoAtual = new JLabel("Método de notificação atual: " + getMetodoNotificacao());
+		JLabel lblMetodoAtual = new JLabel("Mï¿½todo de notificaï¿½ï¿½o atual: " + getMetodoNotificacao());
 		lblMetodoAtual.setFont(new Font("Liberation Sans", Font.PLAIN, 12));
 		lblMetodoAtual.setBounds(100, 62, 300, 20);
 		contentPane.add(lblMetodoAtual);
@@ -65,14 +65,14 @@ public class ViewSelecionarEnvio extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (rbSMS.isSelected()) {
 					setMetodoNotificacao("SMS");
-					lblMetodoAtual.setText("Método de notificação atual: " + getMetodoNotificacao());
-					JOptionPane.showMessageDialog(contentPane, "Metódo de notificação salvo: SMS.");
+					lblMetodoAtual.setText("Mï¿½todo de notificaï¿½ï¿½o atual: " + getMetodoNotificacao());
+					JOptionPane.showMessageDialog(contentPane, "Metï¿½do de notificaï¿½ï¿½o salvo: SMS.");
 				} else if (rdbEmail.isSelected()) {
 					setMetodoNotificacao("email");
-					lblMetodoAtual.setText("Método de notificação atual: " + getMetodoNotificacao());
-					JOptionPane.showMessageDialog(contentPane, "Metódo de notificação salvo: E-mail.");
+					lblMetodoAtual.setText("Mï¿½todo de notificaï¿½ï¿½o atual: " + getMetodoNotificacao());
+					JOptionPane.showMessageDialog(contentPane, "Metï¿½do de notificaï¿½ï¿½o salvo: E-mail.");
 				} else {
-					JOptionPane.showMessageDialog(contentPane, "Selecione uma opção.");
+					JOptionPane.showMessageDialog(contentPane, "Selecione uma opï¿½ï¿½o.");
 				}
 			}
 		});
@@ -98,7 +98,7 @@ public class ViewSelecionarEnvio extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return props.getProperty("metodoNotificacao", "Nenhum método configurado");
+		return props.getProperty("metodoNotificacao", "Nenhum mï¿½todo configurado");
 	}
 
 }

@@ -24,10 +24,7 @@ import br.com.senai.core.domain.Restaurante;
 import br.com.senai.core.service.CategoriaService;
 import br.com.senai.core.service.RestauranteService;
 import br.com.senai.core.util.Utilitaria;
-<<<<<<< Updated upstream
-=======
 import br.com.senai.core.util.api.EnviarNotificacao;
->>>>>>> Stashed changes
 
 public class ViewCadastroRestaurante extends JDialog {
 
@@ -69,8 +66,8 @@ public class ViewCadastroRestaurante extends JDialog {
 				if(isCamposPreenchidos() == true) {
 					int opcao = JOptionPane.showConfirmDialog(
 							contentPane, 
-							"Tem certeza que deseja descartar as informações?",
-							"Confirmação",
+							"Tem certeza que deseja descartar as informaï¿½ï¿½es?",
+							"Confirmaï¿½ï¿½o",
 							JOptionPane.YES_NO_OPTION);
 					if(opcao == 0) {
 						dispose();
@@ -87,41 +84,6 @@ public class ViewCadastroRestaurante extends JDialog {
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-				    String nome = txtNome.getText();
-=======
-
-					String nome = txtNome.getText();
->>>>>>> 7570d7a0022e30e55b78a4eb395d933b19216b7e
-				    String descricao = txtDescricao.getText();
-				    String logradouro = txtLogradouro.getText();
-				    String cidade = txtCidade.getText();
-				    String bairro = txtBairro.getText();
-				    String complemento = txtComplemento.getText();
-				    Categoria categoria = (Categoria) cbCategorias.getSelectedItem();
-					
-				    if (!isEdicaoRestaurante) {
-				        Endereco endereco = new Endereco(cidade, logradouro, bairro, complemento);
-				        restaurante = new Restaurante(nome, descricao, endereco, categoria);
-				        restauranteService.salvar(restaurante);
-				        JOptionPane.showMessageDialog(contentPane, "Restaurante salvo.");
-				        Utilitaria.limparCampos(contentPane);
-				    } else {
-				    	Endereco enderecoTemp = new Endereco(cidade, logradouro, bairro, complemento);
-				        Restaurante restauranteTemp = new Restaurante(nome, descricao, enderecoTemp, categoria);
-				        restauranteService.validar(restauranteTemp);
-				        Endereco endereco = restaurante.getEndereco();
-			        	endereco.setCidade(cidade);
-				        endereco.setLongradouro(logradouro);
-				        endereco.setBairro(bairro);
-				        endereco.setComplemento(complemento);
-				        restaurante.setNome(nome);
-				        restaurante.setDescricao(descricao);
-				        restaurante.setCategoria(categoria);
-				        restauranteService.salvar(restaurante);
-				        JOptionPane.showMessageDialog(contentPane, "Restaurante alterado.");
-=======
 					String nome = txtNome.getText();
 					String descricao = txtDescricao.getText();
 					String logradouro = txtLogradouro.getText();
@@ -154,7 +116,6 @@ public class ViewCadastroRestaurante extends JDialog {
 						restaurante.setCategoria(categoria);
 						restauranteService.salvar(restaurante);
 						JOptionPane.showMessageDialog(contentPane, "Restaurante alterado.");
->>>>>>> Stashed changes
 					}
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(contentPane, ex.getMessage());
@@ -169,7 +130,7 @@ public class ViewCadastroRestaurante extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				if (isEdicaoRestaurante) {
 					int opcao = JOptionPane.showConfirmDialog(contentPane,
-							"Tem certeza que deseja" + " cancelar a edição?", "CONFIRMAÇÃO", JOptionPane.YES_NO_OPTION);
+							"Tem certeza que deseja" + " cancelar a ediï¿½ï¿½o?", "CONFIRMAï¿½ï¿½O", JOptionPane.YES_NO_OPTION);
 					if (opcao == 0) {
 						ViewCadastroRestaurante view = new ViewCadastroRestaurante(owner);
 						setVisible(false);
@@ -178,7 +139,7 @@ public class ViewCadastroRestaurante extends JDialog {
 					}
 				} else {
 					int opcao = JOptionPane.showConfirmDialog(contentPane,
-							"Tem certeza que deseja" + " cancelar a inclusão?", "CONFIRMAÇÃO",
+							"Tem certeza que deseja" + " cancelar a inclusï¿½o?", "CONFIRMAï¿½ï¿½O",
 							JOptionPane.YES_NO_OPTION);
 					if (opcao == 0) {
 						Utilitaria.limparCampos(contentPane);
@@ -265,12 +226,6 @@ public class ViewCadastroRestaurante extends JDialog {
 		this.txtComplemento.setText(restaurante.getEndereco().getComplemento());
 		this.txtLogradouro.setText(restaurante.getEndereco().getLongradouro());
 	}
-<<<<<<< Updated upstream
-	
-	 public void setEdicaoRestaurante(boolean isEdicaoRestaurante) {
-	        this.isEdicaoRestaurante = isEdicaoRestaurante;
-	    }
-	 
 	 
 	 private boolean isCamposPreenchidos() {
 		String nome = txtNome.getText();
@@ -292,7 +247,6 @@ public class ViewCadastroRestaurante extends JDialog {
 	    
 	 }
 	
-=======
 
 	public void setEdicaoRestaurante(boolean isEdicaoRestaurante) {
 		this.isEdicaoRestaurante = isEdicaoRestaurante;
@@ -301,11 +255,11 @@ public class ViewCadastroRestaurante extends JDialog {
 	public static String formatarEnvioEmail(Restaurante restaurante) {
 		StringBuilder emailContent = new StringBuilder();
 		emailContent.append("<div style='font-family: Arial, sans-serif; padding: 20px;'>");
-		emailContent.append("<p>Um novo restaurante foi cadastrado com as seguintes informações:</p>");
+		emailContent.append("<p>Um novo restaurante foi cadastrado com as seguintes informaï¿½ï¿½es:</p>");
 		emailContent.append("<ul style='list-style-type: disc; padding-left: 20px;'>");
 		emailContent.append("<li><b>Nome do Restaurante:</b> ").append(restaurante.getNome()).append("</li>");
 		emailContent.append("<li><b>Categoria:</b> ").append(restaurante.getCategoria()).append("</li>");
-		emailContent.append("<li><b>Descrição:</b> ").append(restaurante.getDescricao()).append("</li>");
+		emailContent.append("<li><b>Descriï¿½ï¿½o:</b> ").append(restaurante.getDescricao()).append("</li>");
 		emailContent.append("<li><b>Logradouro:</b> ").append(restaurante.getEndereco().getLongradouro())
 				.append("</li>");
 		emailContent.append("<li><b>Cidade:</b> ").append(restaurante.getEndereco().getCidade()).append("</li>");
@@ -323,7 +277,7 @@ public class ViewCadastroRestaurante extends JDialog {
 		StringBuilder smsContent = new StringBuilder();
 
 		smsContent.append("Nome: ").append(restaurante.getNome()).append(" | ");
-		smsContent.append("Descrição: ").append(restaurante.getDescricao()).append(" | ");
+		smsContent.append("Descriï¿½ï¿½o: ").append(restaurante.getDescricao()).append(" | ");
 		smsContent.append("Categoria: ").append(restaurante.getCategoria()).append(" | ");
 		smsContent.append("Cidade: ").append(restaurante.getEndereco().getCidade()).append(" | ");
 		smsContent.append("Bairro: ").append(restaurante.getEndereco().getBairro()).append(" | ");
@@ -352,5 +306,4 @@ public class ViewCadastroRestaurante extends JDialog {
 		worker.execute();
 	}
 
->>>>>>> Stashed changes
 }

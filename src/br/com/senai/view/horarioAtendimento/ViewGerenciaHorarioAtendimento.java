@@ -29,6 +29,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
 
 import br.com.senai.core.domain.ComparacaoDeHorario;
@@ -37,12 +38,8 @@ import br.com.senai.core.domain.HorarioAtendimento;
 import br.com.senai.core.domain.Restaurante;
 import br.com.senai.core.service.HorarioAtendimentoService;
 import br.com.senai.core.util.Utilitaria;
-<<<<<<< Updated upstream
-=======
 import br.com.senai.core.util.api.EnviarNotificacao;
->>>>>>> Stashed changes
 import br.com.senai.view.componentes.table.HorarioAtendimentoTableModel;
-import javax.swing.border.TitledBorder;
 
 public class ViewGerenciaHorarioAtendimento extends JFrame {
 
@@ -172,41 +169,6 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.addActionListener(new ActionListener() {
-<<<<<<< Updated upstream
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        try {
-		            Restaurante restaurante = (Restaurante) cbRestaurantes.getSelectedItem();
-		            DiasDaSemana diasDaSemana = (DiasDaSemana) cbDiasDaSemana.getSelectedItem();
-		            LocalTime horaAbertura = extrair(txtAbertura);
-		            LocalTime horaFechamento = extrair(txtFechamento);
-
-	            	if (isAlteracao == false) {
-                        horarioAtendimento = new HorarioAtendimento(diasDaSemana, horaAbertura, horaFechamento, restaurante);
-                        horarioService.salvar(horarioAtendimento);
-                        JOptionPane.showMessageDialog(contentPane, "Horario de atendimento salvo.");
-	            	} else {
-                        horarioAtendimento.setRestaurante(restaurante);
-                        horarioAtendimento.setDiaSemana(diasDaSemana);
-                        horarioAtendimento.setHoraAbertura(horaAbertura);
-                        horarioAtendimento.setHoraFechamento(horaFechamento);
-                        horarioService.salvar(horarioAtendimento);
-                        JOptionPane.showMessageDialog(contentPane, "Horario de atendimento alterada com sucesso!");
-                        isAlteracao = false;
-                       
-	            	} 
-	            	
-	            	atualizaTabelaHorarios(restaurante);
-                    camposManter.add(cbRestaurantes);
-                    Utilitaria.limparCampos(contentPane, camposManter);
-                    
-	            	} catch (DateTimeException ex) {
-		            JOptionPane.showMessageDialog(contentPane, "Digite um valor para a hora válido.");
-				}catch (Exception ex) {
-		            JOptionPane.showMessageDialog(contentPane, ex.getMessage());
-		        }
-		    }
-=======
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -229,7 +191,7 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 						horarioService.salvar(horarioAtendimento);
 						List<HorarioAtendimento> horarioEncontrado = horarioService.listarPor(restaurante);
 						String mensagem = "O Restaurante " + horarioAtendimento.getRestaurante().getNome() + ""
-								+ " teve seu hórario de atendimento modificado. Novos horários: ";
+								+ " teve seu hï¿½rario de atendimento modificado. Novos horï¿½rios: ";
 
 						String tabelaHorariosSms = formatarTabelaHorariosSms(horarioEncontrado);
 						String tabelaHorariosEmail = formatarTabelaHorariosHtml(horarioEncontrado);
@@ -248,19 +210,18 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 					Utilitaria.limparCampos(contentPane, camposManter);
 
 				} catch (DateTimeException ex) {
-					JOptionPane.showMessageDialog(contentPane, "Digite um valor para a hora válido.");
+					JOptionPane.showMessageDialog(contentPane, "Digite um valor para a hora vï¿½lido.");
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(contentPane, ex.getMessage());
 				}
 			}
->>>>>>> Stashed changes
 		});
 
 		btnSalvar.setBounds(653, 66, 101, 25);
 		contentPane.add(btnSalvar);
 
 		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "Ações", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBorder(new TitledBorder(null, "Aï¿½ï¿½es", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setBounds(530, 165, 195, 96);
 		contentPane.add(panel);
 		panel.setLayout(null);
@@ -277,10 +238,10 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 						isAlteracao = true;
 						setHorarioAtendimento(horarioAtendimentoSelecionado);
 					} else {
-						JOptionPane.showMessageDialog(contentPane, "Nenhum item selecionado para edição.");
+						JOptionPane.showMessageDialog(contentPane, "Nenhum item selecionado para ediï¿½ï¿½o.");
 					}
 				} else {
-					JOptionPane.showMessageDialog(contentPane, "Selecione uma linha para edição.");
+					JOptionPane.showMessageDialog(contentPane, "Selecione uma linha para ediï¿½ï¿½o.");
 				}
 			}
 		});
@@ -297,7 +258,7 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 				HorarioAtendimentoTableModel model = (HorarioAtendimentoTableModel) tableHorarioAtendimento.getModel();
 
 				if (linhaSelecionada >= 0 && !model.isVazio()) {
-					int opcao = JOptionPane.showConfirmDialog(contentPane, "Deseja realmente excluir?", "Remoção",
+					int opcao = JOptionPane.showConfirmDialog(contentPane, "Deseja realmente excluir?", "Remoï¿½ï¿½o",
 							JOptionPane.YES_NO_OPTION);
 					if (opcao == 0) {
 						HorarioAtendimento horarioAtendimentoSelecionado = model.getPor(linhaSelecionada);
@@ -306,13 +267,13 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 							model.removePor(linhaSelecionada);
 							camposManter.add(cbRestaurantes);
 							Utilitaria.limparCampos(contentPane, camposManter);
-							JOptionPane.showMessageDialog(contentPane, "Horário de atendimento excluído.");
+							JOptionPane.showMessageDialog(contentPane, "Horï¿½rio de atendimento excluï¿½do.");
 						} catch (Exception ex) {
 							JOptionPane.showMessageDialog(contentPane, ex.getMessage());
 						}
 					}
 				} else {
-					JOptionPane.showMessageDialog(contentPane, "Selecione uma linha para remoção.");
+					JOptionPane.showMessageDialog(contentPane, "Selecione uma linha para remoï¿½ï¿½o.");
 				}
 			}
 		});
@@ -345,7 +306,7 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 
 		if (horarioEncontrado == null) {
 			JOptionPane.showMessageDialog(contentPane,
-					"Não foi encontrado nenhum horario de atendimento " + "com os filtros informados.");
+					"Nï¿½o foi encontrado nenhum horario de atendimento " + "com os filtros informados.");
 		}
 	}
 
@@ -377,16 +338,13 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 			return null;
 		}
 	}
-<<<<<<< Updated upstream
-	
-=======
 
 	public static String formatarTabelaHorariosHtml(List<HorarioAtendimento> horarios) {
 		StringBuilder tabela = new StringBuilder();
 
 		tabela.append("<table style='width:30%; border-collapse:collapse; text-align:center;'>");
 		tabela.append(
-				"<tr><th style='background-color:purple; color:white; border: 1px solid black; width:20%;'>Dia da Semana</th><th style='background-color:purple; color:white; border: 1px solid black; width:40%;'>Horário de Abertura</th><th style='background-color:purple; color:white; border: 1px solid black; width:40%;'>Horário de  Fechamento</th></tr>");
+				"<tr><th style='background-color:purple; color:white; border: 1px solid black; width:20%;'>Dia da Semana</th><th style='background-color:purple; color:white; border: 1px solid black; width:40%;'>Horï¿½rio de Abertura</th><th style='background-color:purple; color:white; border: 1px solid black; width:40%;'>Horï¿½rio de  Fechamento</th></tr>");
 
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
 		DiasDaSemana diaAnterior = null;
@@ -426,7 +384,7 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
 		for (HorarioAtendimento horario : horarios) {
 			tabela.append(horario.getDiaSemana()).append(" - ").append(horario.getHoraAbertura().format(dtf))
-					.append(" às ").append(horario.getHoraFechamento().format(dtf)).append("  |  ");
+					.append(" ï¿½s ").append(horario.getHoraFechamento().format(dtf)).append("  |  ");
 		}
 		return tabela.toString();
 	}
@@ -446,6 +404,5 @@ public class ViewGerenciaHorarioAtendimento extends JFrame {
 
 		worker.execute();
 	}
->>>>>>> Stashed changes
 
 }
