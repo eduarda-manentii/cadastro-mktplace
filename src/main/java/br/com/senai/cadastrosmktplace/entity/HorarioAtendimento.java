@@ -4,6 +4,8 @@ import java.time.LocalTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,6 +37,7 @@ public class HorarioAtendimento {
 	
 	@Column(name = "dia_semana")
 	@NotNull(message = "O dia da semana é obrigatório.")
+	@Enumerated(value = EnumType.STRING)
 	private DiasDaSemana diaSemana;
 	
 	@Column(name = "hora_abertura")
