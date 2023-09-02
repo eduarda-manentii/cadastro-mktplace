@@ -22,8 +22,8 @@ public interface CategoriasRepository extends JpaRepository<Categoria, Integer> 
     @Query("SELECT c FROM Categoria c WHERE c.id = :id")
     public Categoria buscarPor(@Param("id") Integer id); 
 
-    @Query("SELECT c FROM Categoria c WHERE Upper(c.nome) = Upper(:nome)")
-    public Categoria buscarPor(@Param("nome") String nome);
+    @Query("SELECT c FROM Categoria c WHERE Upper(c.nome) LIKE Upper(:nome) ORDER BY c.nome")
+    public List<Categoria> buscarPor(@Param("nome") String nome);
     
     @Query("SELECT c FROM Categoria c")
     public List<Categoria> listarTodas();
