@@ -46,7 +46,6 @@ public class CategoriaService {
 		String filtro = nome + "%";
 		return categoriaRepository.buscarPor(filtro);
 	}
-	
 
 	public List<Categoria> listarTodas() {
 		return categoriaRepository.listarTodas();

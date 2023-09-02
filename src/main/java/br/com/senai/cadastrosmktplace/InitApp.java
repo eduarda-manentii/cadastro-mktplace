@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class InitApp {
-	
 
 	public static void main(String[] args) {
 		SpringApplication.run(InitApp.class, args);
@@ -17,7 +16,7 @@ public class InitApp {
 	@Bean
 	public CommandLineRunner commandLinnerRunner(ApplicationContext ctx) {
 		return args -> {
-			
+			System.out.println("subiu");
 		};
 	}
 
